@@ -336,7 +336,7 @@ class NCRSBannerUI extends LitElement {
     this._loadFromPersistence();
     if (this.code) { return; }
 
-    this.code = "aa";
+    this.code = "pa";
   }
 
   _loadFromPersistence() {
