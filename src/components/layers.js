@@ -382,6 +382,8 @@ class NCRSLayerList extends LitElement {
     encoding += "a";
 
     this.layers.querySelectorAll("ncrs-banner-layer").forEach((layer) => {
+      if (layer.hidden) { return; }
+
       encoding += layer.getColor().encode;
       encoding += layer.getPattern().encode;
     });
