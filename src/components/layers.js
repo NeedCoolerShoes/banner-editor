@@ -14,15 +14,10 @@ const LAYER_SELECTOR_CSS = css`
     z-index: 10;
   }
 
-  @media screen and (min-width: 484px) {
-    .layer-selector {
-      left: -80px;
-    }
-  }
-
   *:hover > .layer-selector,
   *:focus > .layer-selector {
     display: flex;
+    flex-direction: column;
   }
 
   .layer-selector ncrs-banner-colors,
@@ -33,14 +28,33 @@ const LAYER_SELECTOR_CSS = css`
   }
 
   .layer-selector ncrs-banner-colors {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
   }
 
   .layer-selector ncrs-banner-patterns {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     gap: 0.25rem;
+  }
+
+  @media screen and (min-width: 484px) {
+    .layer-selector {
+      left: -80px;
+    }
+  }
+
+  @media screen and (min-width: 893px) {
+    *:hover > .layer-selector,
+    *:focus > .layer-selector {
+      flex-direction: row;
+    }
+
+    .layer-selector ncrs-banner-colors {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
   }
 `;
 
@@ -273,6 +287,11 @@ class NCRSLayerList extends LitElement {
       #layers ncrs-banner-layer:nth-child(n + 17) {
         background-color: rgba(255, 0, 0, 0.1);
       }
+
+      #base-color {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+      }
     `,
     LAYER_SELECTOR_CSS,
   ];
@@ -330,7 +349,7 @@ class NCRSLayerList extends LitElement {
           <button>
             <ncrs-banner-pattern-preview sprite="0"></ncrs-banner-pattern-preview>
             <div class="layer-selector">
-              <ncrs-banner-colors color=${this.baseColor} @select=${this._changeColor}></ncrs-banner-colors>
+              <ncrs-banner-colors id="base-color" color=${this.baseColor} @select=${this._changeColor}></ncrs-banner-colors>
             </div>
           </button>
         </div>

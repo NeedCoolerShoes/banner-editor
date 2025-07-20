@@ -26,9 +26,25 @@ class NCRSBannerUI extends LitElement {
 
   static styles = css`
     :host {
-      display: grid;
-      grid-template-columns: 1fr 1fr 2fr;
-      gap: 0.5rem;
+      display: flex;
+      flex-direction: column;
+        gap: 0.5rem;
+      }
+
+    @media screen and (min-width: 484px) {
+      :host {
+        display: grid;
+        grid-template-areas:
+          "a b b"
+          "c c c";
+      }  
+    }
+
+    @media screen and (min-width: 893px) {
+      :host {
+        grid-template-areas: "a b c";
+        grid-template-columns: 1fr 1fr 2fr;
+      }  
     }
 
     h2 {
@@ -68,8 +84,14 @@ class NCRSBannerUI extends LitElement {
     }
 
     #patterns ncrs-banner-patterns {
-      display: grid;
-      grid-template-columns: repeat(19, 1fr);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      max-width: 460px;
+    }
+
+    #preview-area {
+      grid-area: a;
     }
 
     #preview-section {
@@ -124,7 +146,12 @@ class NCRSBannerUI extends LitElement {
       flex-direction: column;
     }
 
+    #layers-area {
+      grid-area: b;
+    }
+
     #patterns-area {
+      grid-area: c;
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
