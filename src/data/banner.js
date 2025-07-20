@@ -2,6 +2,9 @@ import Version1_8 from "./versions/v1_8.js";
 import Version1_13 from "./versions/v1_13.js";
 import Version1_16 from "./versions/v1_16.js";
 import Version1_21 from "./versions/v1_21.js";
+import PersistenceManager from "../persistence.js";
+
+const LATEST_VERSION = "1_21";
 
 class NCRSBanner extends EventTarget {
   static versions = {
@@ -34,7 +37,13 @@ class NCRSBanner extends EventTarget {
   constructor(versionId) {
     super();
 
-    this.setVersion(versionId);
+    if (versionId) {
+      this.setVersion(versionId);
+    } else {
+      this.setLatestVersion();
+    }
+
+    this.persistence = new PersistenceManager("ncrs-banner");
   }
   version;
   versionId;
@@ -44,6 +53,10 @@ class NCRSBanner extends EventTarget {
     this.version = NCRSBanner.getVersion(this.versionId);
     this.dispatchEvent(new CustomEvent("version-change", {detail: this.version}));
     return this.version;
+  }
+
+  setLatestVersion() {
+    return this.setVersion(LATEST_VERSION);
   }
 
   getColors() {

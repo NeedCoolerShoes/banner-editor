@@ -126,8 +126,8 @@ class NCRSCommandBox extends LitElement {
     return html`
       <div id="controls">
         <div id="buttons">
-          <ncrs-button ?disabled=${mode === "give"} @click=${this._setGiveMode}>Give</ncrs-button>
-          <ncrs-button ?disabled=${mode === "setblock"} @click=${this._setSetblockMode}>Setblock</ncrs-button>
+          <ncrs-button ?active=${mode === "give"} @click=${this._setGiveMode}>Give</ncrs-button>
+          <ncrs-button ?active=${mode === "setblock"} @click=${this._setSetblockMode}>Setblock</ncrs-button>
         </div>
         <div id="version-selector">
           ${this._versionSelector()}

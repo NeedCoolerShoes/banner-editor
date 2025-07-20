@@ -7,6 +7,7 @@ import "./components/colors.js";
 import "./components/patterns.js";
 import "./components/layers.js";
 import "./components/command_box.js";
+import "./components/saved_banners.js";
 
 import { css, html, LitElement, unsafeCSS } from "lit";
 import { BANNER, NCRSBanner } from "./data/banner.js";
@@ -145,6 +146,7 @@ class NCRSBannerUI extends LitElement {
 
     #share-link {
       font-size: medium;
+      font-family: monospace;
       box-sizing: border-box;
       color: white;
       background-color: #131315;
@@ -157,6 +159,10 @@ class NCRSBannerUI extends LitElement {
 
     #share-link:focus-visible {
       outline: none;
+    }
+
+    #url-banner {
+      margin-top: 0.5rem;
     }
 
     @keyframes wave {
@@ -216,6 +222,9 @@ class NCRSBannerUI extends LitElement {
           <ncrs-button @click=${this._randomize}>Randomize!</ncrs-button>
           <ncrs-button @click=${this._clear}>Clear All</ncrs-button>
         </div>
+        <ncrs-section id="url-banner">
+          <h2 slot="header">URL Banner</h2>
+        </ncrs-section>
       </section>
       <section id="layers-area">
         <ncrs-section id="layers">
@@ -244,8 +253,20 @@ class NCRSBannerUI extends LitElement {
           <h2 slot="header">Generate Command</h2>
           <ncrs-banner-command-box version=${BANNER.versionId} code=${this.code}></ncrs-banner-command-box>
         </ncrs-section>
+        <ncrs-section>
+          <h2 slot="header">Saved Banners</h2>
+          <ncrs-banner-saved-banners code=${this.code} @load-banner=${this._loadSavedBanner}></ncrs-banner-saved-banners>
+        </ncrs-section>
       </section>
     `;
+  }
+
+  setBanner(code) {
+    this.layers.decode(code);
+  }
+
+  _loadSavedBanner(event) {
+    this.setBanner(event.detail);
   }
 
   _updateURL(replace = false) {
