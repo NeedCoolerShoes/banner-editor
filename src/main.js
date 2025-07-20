@@ -3,6 +3,7 @@ import "./components/banner_preview.js";
 import "./components/misc/section.js";
 import "./components/misc/icon.js";
 import "./components/misc/button.js";
+import "./components/misc/modal.js";
 import "./components/colors.js";
 import "./components/patterns.js";
 import "./components/layers.js";
@@ -15,6 +16,7 @@ import { NCRSLayerList } from "./components/layers.js";
 import NCRSBannerPatternPreview from "./components/pattern_preview.js";
 
 import IMG_BANNER_OVERLAY from "/assets/banner_overlay.png";
+import Modal from "./components/misc/modal.js";
 
 class NCRSBannerUI extends LitElement {
   static properties = {
@@ -164,6 +166,20 @@ class NCRSBannerUI extends LitElement {
     #url-banner {
       margin-top: 0.5rem;
     }
+    
+    #url-banner > div {
+      display: flex;
+      padding: 0.25rem;
+      gap: 0.25rem;
+    }
+
+    #url-banner ncrs-banner-preview {
+      cursor: pointer;
+    }
+
+    ncrs-modal {
+      z-index: 50;
+    }
 
     @keyframes wave {
       0% {
@@ -181,8 +197,6 @@ class NCRSBannerUI extends LitElement {
   constructor() {
     super();
 
-    this.code = this.code || "aa";
-
     this._color = BANNER.defaultColor().color;
     this.layers = new NCRSLayerList();
     this.layers.addEventListener("update", () => {
@@ -192,10 +206,20 @@ class NCRSBannerUI extends LitElement {
     this.previewOverlay = new NCRSBannerPatternPreview();
     this.previewOverlay.id = "preview-overlay";
 
+    this.galleryModal = this._createGalleryModal();
+
     BANNER.addEventListener("version-change", () => {
       this.requestUpdate();
     });
+
+    this._setCode();
+    this.layers.decode(this.code);
+
+    window.addEventListener("popstate", () => {
+      this.loadFromURL();
+    });
   }
+  urlBanners = [];
 
   render() {
     this._updateURL();
@@ -221,10 +245,9 @@ class NCRSBannerUI extends LitElement {
         <div id="buttons">
           <ncrs-button @click=${this._randomize}>Randomize!</ncrs-button>
           <ncrs-button @click=${this._clear}>Clear All</ncrs-button>
+          <ncrs-button @click=${this._openShareModal}>Share to Gallery</ncrs-button>
         </div>
-        <ncrs-section id="url-banner">
-          <h2 slot="header">URL Banner</h2>
-        </ncrs-section>
+        ${this._renderURLBanners()}
       </section>
       <section id="layers-area">
         <ncrs-section id="layers">
@@ -258,11 +281,42 @@ class NCRSBannerUI extends LitElement {
           <ncrs-banner-saved-banners code=${this.code} @load-banner=${this._loadSavedBanner}></ncrs-banner-saved-banners>
         </ncrs-section>
       </section>
+      ${this.galleryModal}
     `;
   }
 
   setBanner(code) {
     this.layers.decode(code);
+  }
+
+  loadFromURL() {
+    const path = new URLSearchParams(location).get("search");
+    const banners = path.replaceAll(/[?=]/g, "").split("_");
+
+    if (banners[0] === "") { return; }
+
+    this.urlBanners = banners;
+
+    this.setBanner(banners[0]);
+  }
+
+  _setCode() {
+    if (this.code) { return; }
+
+    this.loadFromURL();
+    if (this.code) { return; }
+
+    this._loadFromPersistence();
+    if (this.code) { return; }
+
+    this.code = "aa";
+  }
+
+  _loadFromPersistence() {
+    const banner = BANNER.persistence.get("current", null);
+    if (!banner) { return; }
+
+    this.code = banner;
   }
 
   _loadSavedBanner(event) {
@@ -284,7 +338,7 @@ class NCRSBannerUI extends LitElement {
       }
     }
 
-    localStorage.setItem("ncrs-banners-current", this.code)
+    BANNER.persistence.set("current", this.code);
   }
 
   _updateColor(event) {
@@ -349,6 +403,46 @@ class NCRSBannerUI extends LitElement {
 
   _clear() {
     this.layers.clear();
+  }
+
+  _renderURLBanners() {
+    if (this.urlBanners.length < 1) { return; }
+
+    const banners = this.urlBanners.map(banner => {
+      function load() {
+        this.setBanner(banner);
+      }
+
+      return html`
+        <ncrs-banner-preview @click=${load} banner=${banner} title="Load URL banner."></ncrs-banner-preview>
+      `;
+    })
+
+    return html`
+      <ncrs-section id="url-banner">
+        <h2 slot="header">URL Banner</h2>
+        <div>
+          ${banners}
+        </div>
+      </ncrs-section>
+    `;
+  }
+
+  _createGalleryModal() {
+    const modal = new Modal();
+    modal.id = "export-modal";
+    modal.part = "export-form";
+
+    const slot = document.createElement("slot");
+    slot.name = "export-form";
+
+    modal.appendChild(slot);
+
+    return modal;
+  }
+
+  _openShareModal() {
+    this.galleryModal.show();
   }
 }
 

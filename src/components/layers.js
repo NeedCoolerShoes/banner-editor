@@ -284,10 +284,6 @@ class NCRSLayerList extends LitElement {
 
     this.layers = document.createElement("div");
     this.layers.id = "layers";
-
-    this.addLayer("#5e7c16", 4);
-    this.addLayer("#5e7c16", 5);
-    this.addLayer("#5e7c16", 6);
   }
   eventUpdate = new CustomEvent("update");
 
@@ -334,7 +330,7 @@ class NCRSLayerList extends LitElement {
           <button>
             <ncrs-banner-pattern-preview sprite="0"></ncrs-banner-pattern-preview>
             <div class="layer-selector">
-              <ncrs-banner-colors @select=${this._changeColor}></ncrs-banner-colors>
+              <ncrs-banner-colors color=${this.baseColor} @select=${this._changeColor}></ncrs-banner-colors>
             </div>
           </button>
         </div>
