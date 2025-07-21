@@ -14,9 +14,12 @@ import { css, html, LitElement, unsafeCSS } from "lit";
 import { BANNER, NCRSBanner } from "./data/banner.js";
 import { NCRSLayerList } from "./components/layers.js";
 import NCRSBannerPatternPreview from "./components/pattern_preview.js";
-
-import IMG_BANNER_OVERLAY from "/assets/banner_overlay.png";
 import Modal from "./components/misc/modal.js";
+
+import IMG_BANNER_SPRITES from "/assets/banner_sprites.png";
+import IMG_BANNER_OVERLAY from "/assets/banner_overlay.png";
+import IMG_SHIELD_SPRITES from "/assets/shield_sprites.png";
+import IMG_SHIELD_SHADOW_OVERLAY from "/assets/shield_shadow_overlay.png";
 
 class NCRSBannerUI extends LitElement {
   static properties = {
@@ -28,8 +31,16 @@ class NCRSBannerUI extends LitElement {
     :host {
       display: flex;
       flex-direction: column;
-        gap: 0.5rem;
-      }
+      gap: 0.5rem;
+
+      --ncrs-banner-sprites: url(${unsafeCSS(IMG_BANNER_SPRITES)});
+      --ncrs-banner-overlay: url(${unsafeCSS(IMG_BANNER_OVERLAY)});
+    }
+
+    :host(.shield-sprites) {
+      --ncrs-banner-sprites: url(${unsafeCSS(IMG_SHIELD_SPRITES)});
+      --ncrs-banner-overlay: url(${unsafeCSS(IMG_SHIELD_SHADOW_OVERLAY)});
+    }
 
     @media screen and (min-width: 484px) {
       :host {
@@ -98,6 +109,16 @@ class NCRSBannerUI extends LitElement {
       background-color: transparent;
     }
 
+    #preview-section div[slot="header"] {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    #preview-section label {
+      font-size: small;
+      user-select: none;
+    }
+
     #preview {
       --ncrs-banner-scale: 8;
       padding: 1rem;
@@ -137,8 +158,9 @@ class NCRSBannerUI extends LitElement {
       width: calc(20px * var(--ncrs-banner-scale));
       height: calc(40px * var(--ncrs-banner-scale));
       position: absolute;
-      background-image: url(${unsafeCSS(IMG_BANNER_OVERLAY)});
+      background-image: var(--ncrs-banner-overlay);
       background-size: calc(20px * var(--ncrs-banner-scale)) calc(40px * var(--ncrs-banner-scale));
+      image-rendering: pixelated;
     }
 
     #buttons {
@@ -255,10 +277,20 @@ class NCRSBannerUI extends LitElement {
       event.target.select();
     }
 
+    function toggleShieldSprites(event) {
+      event.target.checked ? this.classList.add("shield-sprites") : this.classList.remove("shield-sprites");
+    }
+
     return html`
       <section id="preview-area">
         <ncrs-section id="preview-section">
-          <h2 slot="header">Preview</h2>
+          <div slot="header">
+            <h2>Preview</h2>
+            <div>
+              <label for="shield-sprites">Use Shield Sprites?</label>
+              <input id="shield-sprites" type="checkbox" @change=${toggleShieldSprites}>
+            </div>
+          </div>
           <div id="preview">
             <div class="skew">
               <div class="wave">
