@@ -6,12 +6,12 @@ html, body, #app {
 
 body {
   display: flex;
-  align-items: center;
   justify-content: center;
   background-color: #151515;
 }
 
 #app {
+  margin-top: 1rem;
   max-width: 998px;
   height: fit-content;
 }
