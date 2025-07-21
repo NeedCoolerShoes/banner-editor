@@ -60,8 +60,8 @@ const LAYER_SELECTOR_CSS = css`
 
 class NCRSLayer extends LitElement {
   static properties = {
-    color: { type: String },
-    pattern: { type: Number },
+    color: { type: String, reflect: true },
+    pattern: { type: Number, reflect: true },
     hidden: { type: Boolean, reflect: true },
   };
 
@@ -74,11 +74,11 @@ class NCRSLayer extends LitElement {
         box-sizing: border-box;
       }
 
-      :host(:first-of-type) #move .up {
+      :host(:first-child) #move .up {
         display: none;
       }
 
-      :host(:last-of-type) #move .down {
+      :host(:last-child) #move .down {
         display: none;
       }
 
@@ -292,6 +292,10 @@ class NCRSLayerList extends LitElement {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
       }
+
+      .sortable-fallback {
+        display: none;
+      }
     `,
     LAYER_SELECTOR_CSS,
   ];
@@ -362,8 +366,10 @@ class NCRSLayerList extends LitElement {
     this.dispatchEvent(this.eventUpdate);
 
     const sortable = new Sortable(this.layers, {
-      handle: "ncrs-banner-layer::part(handle)",
-      onEnd: () => {
+      handle: ".handle",
+      touchStartThreshold: 3,
+      onEnd: (event) => {
+        event.preventDefault();
         this.dispatchEvent(this.eventUpdate);
       },
     });
