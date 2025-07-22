@@ -20,6 +20,8 @@ class NCRSBannerColors extends LitElement {
       background-color: var(--color);
       box-sizing: border-box;
       cursor: pointer;
+      border-radius: 2px;
+      box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 3px inset, rgba(0, 0, 0, 0.25) 0px -2px 1px inset;
     }
 
     button[data-name=black] {

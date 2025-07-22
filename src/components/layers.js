@@ -70,7 +70,7 @@ class NCRSLayer extends LitElement {
       :host {
         position: relative;
         display: flex;
-        border-bottom: 1px solid #4e5053;
+        border-bottom: 1px solid #2e2f34;
         box-sizing: border-box;
       }
 
@@ -263,7 +263,7 @@ class NCRSLayerList extends LitElement {
       #base {
         display: flex;
         box-sizing: border-box;
-        border-bottom: 1px solid #4e5053;
+        border-bottom: 1px solid #2e2f34;
       }
 
       #color {
