@@ -30,6 +30,8 @@ class Version1_8 extends BaseVersion {
     const base = bannerData.shift();
 
     const code = base.color.code;
+    if (bannerData.length < 1) { return `give ${selector} minecraft:banner 1 0 {BlockEntityTag:{Base:${code}}}`; }
+
     const patterns = this._patternsJSON(bannerData);
 
     return `give ${selector} minecraft:banner 1 0 {BlockEntityTag:{Base:${code},Patterns:${patterns}}}`;
@@ -39,6 +41,8 @@ class Version1_8 extends BaseVersion {
     const base = bannerData.shift();
 
     const code = base.color.code;
+    if (bannerData.length < 1) { return `setblock ~ ~ ~ minecraft:standing_banner 0 replace {Base:${code}}`; }
+
     const patterns = this._patternsJSON(bannerData);
 
     return `setblock ~ ~ ~ minecraft:standing_banner 0 replace {Base:${code},Patterns:${patterns}}`;
