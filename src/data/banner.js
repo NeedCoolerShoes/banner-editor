@@ -30,8 +30,22 @@ class NCRSBanner extends EventTarget {
     return output;
   }
 
+  static toValidVersionId(id) {
+    if (Object.keys(this.versions).includes(id)) { return id; }
+
+    return this.latestVersion();
+  }
+
   static latestVersion() {
     return Object.keys(this.versions).at(-1);
+  }
+
+  static fromVersion(id) {
+    return new NCRSBanner(id);
+  }
+
+  static fromLatestVersion() {
+    return new NCRSBanner(this.latestVersion());
   }
 
   constructor(versionId) {
@@ -49,8 +63,12 @@ class NCRSBanner extends EventTarget {
   versionId;
 
   setVersion(versionId) {
+    const newVersion = NCRSBanner.getVersion(versionId);
+
+    if (!newVersion) { return; }
+
     this.versionId = versionId;
-    this.version = NCRSBanner.getVersion(this.versionId);
+    this.version = newVersion;
     this.dispatchEvent(new CustomEvent("version-change", {detail: this.version}));
     return this.version;
   }

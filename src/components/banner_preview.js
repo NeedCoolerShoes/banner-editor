@@ -1,6 +1,8 @@
 import { css, LitElement } from "lit";
 import NCRSBannerPatternPreview from "./pattern_preview";
-import { BANNER  } from "../data/banner";
+import { NCRSBanner  } from "../data/banner";
+
+const BANNER = NCRSBanner.fromLatestVersion();
 
 class NCRSBannerPreview extends LitElement {
   static properties = {

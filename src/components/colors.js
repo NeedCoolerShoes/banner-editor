@@ -1,9 +1,10 @@
 import { css, LitElement } from "lit";
-import { BANNER  } from "../data/banner";
+import { NCRSBanner } from "../data/banner";
 
 class NCRSBannerColors extends LitElement {
   static properties = {
-    color: { type: String },
+    version: {type: String, reflect: true },
+    color: { type: String, reflect: true },
   };
 
   static styles = css`
@@ -40,8 +41,11 @@ class NCRSBannerColors extends LitElement {
 
   constructor() {
     super();
+    
+    this.version = NCRSBanner.toValidVersionId(this.version);
+    this.banner = NCRSBanner.fromVersion(this.version);
 
-    this.color = this.color || BANNER.getColors()[0].color;
+    this.color = this.color || this.banner.getColors()[0].color;
   }
 
   _createColor(color) {
@@ -64,9 +68,11 @@ class NCRSBannerColors extends LitElement {
   }
 
   render() {
+    this.banner.setVersion(this.version);
+
     const colors = [];
 
-    BANNER.getColors().forEach((color) => colors.push(this._createColor(color)));
+    this.banner.getColors().forEach((color) => colors.push(this._createColor(color)));
 
     return colors;
   }

@@ -75,7 +75,7 @@ class NCRSCommandBox extends LitElement {
   constructor() {
     super();
 
-    this.version = this.version || NCRSBanner.latestVersion();
+    this.version = NCRSBanner.toValidVersionId(this.version);
     this.code = this.code || "aa";
 
     this.banner = new NCRSBanner(this.version);
@@ -134,7 +134,7 @@ class NCRSCommandBox extends LitElement {
           <input id="selector" value=${selector} @input=${setSelector}/>
         </div>
       </div>
-      <textarea rows="4" readonly @click=${select}>${command}</textarea>
+      <textarea rows="4" readonly @click=${select} .value=${command}></textarea>
     `;
   }
 

@@ -1,6 +1,6 @@
 import { css, html, LitElement, unsafeCSS } from "lit";
 import Sortable from "sortablejs";
-import { BANNER } from "../data/banner";
+import { NCRSBanner } from "../data/banner";
 import IMG_BANNER_BG from "../../assets/banner_bg.png";
 
 const LAYER_SELECTOR_CSS = css`
@@ -60,6 +60,7 @@ const LAYER_SELECTOR_CSS = css`
 
 class NCRSLayer extends LitElement {
   static properties = {
+    version: {type: String, reflect: true },
     color: { type: String, reflect: true },
     pattern: { type: Number, reflect: true },
     hidden: { type: Boolean, reflect: true },
@@ -156,10 +157,13 @@ class NCRSLayer extends LitElement {
   constructor() {
     super();
 
-    this.color = this.color || BANNER.defaultColor().color;
-    this.pattern = this.pattern || BANNER.defaultPattern().sprite;
+    this.version = NCRSBanner.toValidVersionId(this.version);
+    this.banner = NCRSBanner.fromVersion(this.version);
 
-    BANNER.addEventListener("version-change", () => {
+    this.color = this.color || this.banner.defaultColor().color;
+    this.pattern = this.pattern || this.banner.defaultPattern().sprite;
+
+    this.banner.addEventListener("version-change", () => {
       this.requestUpdate();
     });
   }
@@ -169,6 +173,8 @@ class NCRSLayer extends LitElement {
   eventRemove = new CustomEvent("remove");
 
   render() {
+    this.banner.setVersion(this.version);
+
     this.style.setProperty("--ncrs-banner-color", this.color);
 
     return html`
@@ -180,8 +186,8 @@ class NCRSLayer extends LitElement {
         <button id="change-types">
           <ncrs-banner-pattern-preview sprite=${this.pattern}></ncrs-banner-pattern-preview>
           <div class="layer-selector">
-            <ncrs-banner-colors @select=${this._changeColor} color=${this.color}></ncrs-banner-colors>
-            <ncrs-banner-patterns @select=${this._changePattern}></ncrs-banner-patterns>
+            <ncrs-banner-colors @select=${this._changeColor} version=${this.version} color=${this.color}></ncrs-banner-colors>
+            <ncrs-banner-patterns @select=${this._changePattern} version=${this.version}></ncrs-banner-patterns>
           </div>
         </button>
         <div class="spacer"></div>
@@ -198,11 +204,11 @@ class NCRSLayer extends LitElement {
   }
 
   getPattern() {
-    return BANNER.getPattern(this.pattern);
+    return this.banner.getPattern(this.pattern);
   }
 
   getColor() {
-    return BANNER.getColor(this.color);
+    return this.banner.getColor(this.color);
   }
 
   _toggleVisible() {
@@ -235,6 +241,7 @@ class NCRSLayer extends LitElement {
 
 class NCRSLayerList extends LitElement {
   static properties = {
+    version: { type: String, reflect: true },
     baseColor: { type: String },
   };
 
@@ -303,7 +310,10 @@ class NCRSLayerList extends LitElement {
   constructor() {
     super();
 
-    this.baseColor = this.baseColor || BANNER.defaultColor().color;
+    this.version = NCRSBanner.toValidVersionId(this.version);
+    this.banner = NCRSBanner.fromVersion(this.version);
+
+    this.baseColor = this.baseColor || this.banner.defaultColor().color;
 
     this.layers = document.createElement("div");
     this.layers.id = "layers";
@@ -312,6 +322,7 @@ class NCRSLayerList extends LitElement {
 
   addLayer(color, sprite) {
     const layer = new NCRSLayer();
+    layer.version = this.version;
     layer.color = color;
     layer.pattern = sprite;
 
@@ -344,6 +355,12 @@ class NCRSLayerList extends LitElement {
   }
 
   render() {
+    this.banner.setVersion(this.version);
+    this.layers.querySelectorAll("ncrs-banner-layer").forEach(layer => {
+      layer.version = this.version;
+      console.log(layer.version);
+    });
+
     this.style.setProperty("--ncrs-banner-color", this.baseColor);
 
     return html`
@@ -353,7 +370,10 @@ class NCRSLayerList extends LitElement {
           <button>
             <ncrs-banner-pattern-preview sprite="0"></ncrs-banner-pattern-preview>
             <div class="layer-selector">
-              <ncrs-banner-colors id="base-color" color=${this.baseColor} @select=${this._changeColor}></ncrs-banner-colors>
+              <ncrs-banner-colors
+              id="base-color" color=${this.baseColor} version=${this.version}
+              @select=${this._changeColor}
+            ></ncrs-banner-colors>
             </div>
           </button>
         </div>
@@ -384,7 +404,7 @@ class NCRSLayerList extends LitElement {
       return;
     }
 
-    let encoding = BANNER.getColor(this.baseColor).encode;
+    let encoding = this.banner.getColor(this.baseColor).encode;
     encoding += "a";
 
     this.layers.querySelectorAll("ncrs-banner-layer").forEach((layer) => {
@@ -398,8 +418,10 @@ class NCRSLayerList extends LitElement {
   }
 
   decode(banner) {
+    this.banner.setVersion(this.version);
+
     this.layers.replaceChildren();
-    BANNER.parse(banner).forEach((layer, idx) => {
+    this.banner.parse(banner).forEach((layer, idx) => {
       if (idx === 0) {
         this.baseColor = layer.color.color;
         return;

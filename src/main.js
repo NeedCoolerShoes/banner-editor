@@ -11,7 +11,7 @@ import "./components/command_box.js";
 import "./components/saved_banners.js";
 
 import { css, html, LitElement, unsafeCSS } from "lit";
-import { BANNER, NCRSBanner } from "./data/banner.js";
+import { NCRSBanner } from "./data/banner.js";
 import { NCRSLayerList } from "./components/layers.js";
 import NCRSBannerPatternPreview from "./components/pattern_preview.js";
 import Modal from "./components/misc/modal.js";
@@ -23,6 +23,7 @@ import IMG_SHIELD_SHADOW_OVERLAY from "/assets/shield_shadow_overlay.png";
 
 class NCRSBannerUI extends LitElement {
   static properties = {
+    version: { type: String, reflect: true },
     code: { type: String, reflect: true },
     _color: { state: true },
   };
@@ -246,7 +247,10 @@ class NCRSBannerUI extends LitElement {
   constructor() {
     super();
 
-    this._color = BANNER.defaultColor().color;
+    this.version = NCRSBanner.toValidVersionId(this.version);
+    this.banner = NCRSBanner.fromVersion(this.version);
+
+    this._color = this.banner.defaultColor().color;
     this.layers = new NCRSLayerList();
     this.layers.addEventListener("update", () => {
       this.code = this.layers.encode();
@@ -256,10 +260,6 @@ class NCRSBannerUI extends LitElement {
     this.previewOverlay.id = "preview-overlay";
 
     this.galleryModal = this._createGalleryModal();
-
-    BANNER.addEventListener("version-change", () => {
-      this.requestUpdate();
-    });
 
     this._setCode();
     this.layers.decode(this.code);
@@ -271,6 +271,9 @@ class NCRSBannerUI extends LitElement {
   urlBanners = [];
 
   render() {
+    this.banner.setVersion(this.version);
+    this.layers.version = this.version;
+
     this._updateURL();
 
     function select(event) {
@@ -321,9 +324,12 @@ class NCRSBannerUI extends LitElement {
             ${this._versionSelector()}
           </div>
           <div id="patterns" style="--ncrs-banner-color: ${this._color};">
-            <ncrs-banner-colors @select=${this._updateColor}></ncrs-banner-colors>
+            <ncrs-banner-colors @select=${this._updateColor} version=${this.version}></ncrs-banner-colors>
             <hr/>
-            <ncrs-banner-patterns @select=${this._addLayer} @preview-show=${this._showPreview} @preview-hide=${this._hidePreview}>
+            <ncrs-banner-patterns
+              @select=${this._addLayer} @preview-show=${this._showPreview} @preview-hide=${this._hidePreview}
+              version=${this.version}
+            >
             </ncrs-banner-patterns>
           </div>
         </ncrs-section>
@@ -333,7 +339,7 @@ class NCRSBannerUI extends LitElement {
         </ncrs-section>
         <ncrs-section>
           <h2 slot="header">Generate Command</h2>
-          <ncrs-banner-command-box version=${BANNER.versionId} code=${this.code}></ncrs-banner-command-box>
+          <ncrs-banner-command-box version=${this.version} code=${this.code}></ncrs-banner-command-box>
         </ncrs-section>
         <ncrs-section>
           <h2 slot="header">Saved Banners</h2>
@@ -345,6 +351,15 @@ class NCRSBannerUI extends LitElement {
   }
 
   setBanner(code) {
+    if (!this.banner.validate(code)) {
+      if (!NCRSBanner.fromLatestVersion().validate(code)) {
+        throw `Invalid Banner Code: ${code}`;
+      }
+
+      this.version = NCRSBanner.latestVersion();
+      this.layers.version = NCRSBanner.latestVersion();
+    }
+
     this.layers.decode(code);
   }
 
@@ -372,7 +387,7 @@ class NCRSBannerUI extends LitElement {
   }
 
   _loadFromPersistence() {
-    const banner = BANNER.persistence.get("current", null);
+    const banner = this.banner.persistence.get("current", null);
     if (!banner) { return; }
 
     this.code = banner;
@@ -397,7 +412,7 @@ class NCRSBannerUI extends LitElement {
       }
     }
 
-    BANNER.persistence.set("current", this.code);
+    this.banner.persistence.set("current", this.code);
   }
 
   _updateColor(event) {
@@ -425,13 +440,13 @@ class NCRSBannerUI extends LitElement {
       const option = document.createElement("option");
       option.value = key;
       option.textContent = version.name;
-      option.selected = (NCRSBanner.getVersion(key) === BANNER.version);
+      option.selected = (NCRSBanner.getVersion(key) === this.banner.version);
 
       return option;
     });
 
     function update(event) {
-      BANNER.setVersion(event.target.value);
+      this.version = event.target.value;
     }
 
     return html`
@@ -445,10 +460,10 @@ class NCRSBannerUI extends LitElement {
     let str = ""
     const count = Math.floor((Math.random() * 6) + 2)
     for (let i = 0; i < count; i++) {
-      const colorIdx = Math.floor(Math.random() * BANNER.getColors().length)
-      const patternIdx = Math.floor(Math.random() * BANNER.getPatterns().length)
-      const color = BANNER.getColors()[colorIdx]
-      const pattern = BANNER.getPatterns()[patternIdx]
+      const colorIdx = Math.floor(Math.random() * this.banner.getColors().length)
+      const patternIdx = Math.floor(Math.random() * this.banner.getPatterns().length)
+      const color = this.banner.getColors()[colorIdx]
+      const pattern = this.banner.getPatterns()[patternIdx]
 
       if (i == 0) {
         str += (color.encode + "a")

@@ -1,7 +1,7 @@
 import { css, html, LitElement } from "lit";
-import { BANNER } from "../data/banner";
-import NCRSBannerPreview from "./banner_preview.js";
-import NCRSBannerIcon from "./misc/icon.js";
+import { NCRSBanner } from "../data/banner";
+
+const BANNER = NCRSBanner.fromLatestVersion();
 
 class NCRSSavedBanners extends LitElement {
   static properties = {

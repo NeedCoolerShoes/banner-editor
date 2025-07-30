@@ -1,12 +1,13 @@
 import { css, LitElement, unsafeCSS } from "lit";
-import { BANNER } from "../data/banner";
+import { NCRSBanner } from "../data/banner";
 import NCRSBannerPatternPreview from "./pattern_preview";
 
 import IMG_BANNER_BG from "../../assets/banner_bg.png";
 
 class NCRSBannerPatterns extends LitElement {
   static properties = {
-    color: { type: String },
+    version: { type: String, reflect: true },
+    color: { type: String, reflect: true },
   };
 
   static styles = css`
@@ -28,9 +29,8 @@ class NCRSBannerPatterns extends LitElement {
   constructor() {
     super();
 
-    BANNER.addEventListener("version-change", () => {
-      this.requestUpdate();
-    });
+    this.version = NCRSBanner.toValidVersionId(this.version);
+    this.banner = NCRSBanner.fromVersion(this.version);
   }
 
   _createPattern(pattern) {
@@ -58,9 +58,12 @@ class NCRSBannerPatterns extends LitElement {
   }
 
   render() {
+    console.log("PATTERN: ", this.version);
+    this.banner.setVersion(this.version);
+
     const patterns = [];
 
-    BANNER.getPatterns().forEach((pattern) => patterns.push(this._createPattern(pattern)));
+    this.banner.getPatterns().forEach((pattern) => patterns.push(this._createPattern(pattern)));
 
     return patterns;
   }
