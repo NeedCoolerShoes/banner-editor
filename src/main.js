@@ -69,7 +69,8 @@ class NCRSBannerUI extends LitElement {
       width: 100%;
       height: 0px;
       border-top-width: 100%;
-      border-color: #4e5053;
+      border-color: #2e2f34;
+      border: 1px solid #2e2f34;
       box-sizing: border-box;
     }
 
