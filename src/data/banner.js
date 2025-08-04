@@ -109,6 +109,10 @@ class NCRSBanner extends EventTarget {
     return this.version.generateSetBlockCommand(banner);
   }
 
+  generateShieldGiveCommand(banner) {
+    return this.version.generateShieldGiveCommand(banner);
+  }
+
   fromEncoding(banner) {
     return this.version.fromEncoding(banner);
   }

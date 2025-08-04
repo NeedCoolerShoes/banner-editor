@@ -39,7 +39,6 @@ class NCRSCommandBox extends LitElement {
 
     #buttons {
       display: flex;
-      gap: 0.25rem;
     }
 
     #buttons ncrs-button::part(button) {
@@ -70,6 +69,21 @@ class NCRSCommandBox extends LitElement {
       box-shadow: 0 0 0 2px #313436;
       padding-left: 0.25rem;
     }
+
+    fieldset {
+      display: flex;
+      gap: 0.25rem;
+      padding: 0.125rem 0.25rem;
+      border: unset;
+      margin: 0px;
+      margin-top: -0.25rem;
+    }
+
+    legend {
+      font-size: small;
+      margin-bottom: -0.125rem;
+      color: rgb(169, 169, 169);
+    }
   `;
 
   constructor() {
@@ -83,6 +97,7 @@ class NCRSCommandBox extends LitElement {
     this.commandModes = {
       give: this.banner.generateGiveCommand.bind(this.banner),
       setblock: this.banner.generateSetBlockCommand.bind(this.banner),
+      shield: this.banner.generateShieldGiveCommand.bind(this.banner),
     };
   }
 
@@ -126,8 +141,15 @@ class NCRSCommandBox extends LitElement {
     return html`
       <div id="controls">
         <div id="buttons">
-          <ncrs-button ?active=${mode === "give"} @click=${this._setGiveMode}>Give</ncrs-button>
-          <ncrs-button ?active=${mode === "setblock"} @click=${this._setSetblockMode}>Setblock</ncrs-button>
+          <fieldset>
+            <legend>Banner</legend>
+            <ncrs-button ?active=${mode === "give"} @click=${this._setGiveMode} title="Give Banner">Give</ncrs-button>
+            <ncrs-button ?active=${mode === "setblock"} @click=${this._setSetblockMode} title="Setblock Banner">Setblock</ncrs-button>
+          </fieldset>
+          <fieldset>
+            <legend>Shield</legend>
+            <ncrs-button ?active=${mode === "shield"} @click=${this._setShieldMode} title="Give Shield">Give</ncrs-button>
+          </fieldset>
         </div>
         <div id="version-selector">
           ${this._versionSelector()}
@@ -144,6 +166,10 @@ class NCRSCommandBox extends LitElement {
 
   _setSetblockMode() {
     this.mode = "setblock";
+  }
+
+  _setShieldMode() {
+    this.mode = "shield";
   }
 
   _versionSelector() {

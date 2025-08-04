@@ -18,6 +18,12 @@ class Version1_21 extends BaseVersion {
     return this._generateSetblockCommand(bannerData);
   }
 
+  generateShieldGiveCommand(banner, selector = "@p") {
+    const bannerData = this.parse(banner);
+
+    return this._generateShieldGiveCommand(bannerData, selector);
+  }
+
   _patternsJSON(bannerData) {
     return JSON.stringify(
       bannerData.map((data) => {
@@ -46,6 +52,17 @@ class Version1_21 extends BaseVersion {
     const patterns = this._patternsJSON(bannerData);
 
     return `setblock ~ ~ ~ minecraft:${name}_banner{patterns:${patterns}}`;
+  }
+
+  _generateShieldGiveCommand(bannerData, selector) {
+    const base = bannerData.shift();
+
+    const name = base.color.name;
+    if (bannerData.length < 1) { return `give ${selector} minecraft:shield[base_color="${name}"]`; }
+
+    const patterns = this._patternsJSON(bannerData);
+
+    return `give ${selector} minecraft:shield[base_color="${name}",banner_patterns=${patterns}]`;
   }
 }
 

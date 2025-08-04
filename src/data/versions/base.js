@@ -10,6 +10,8 @@ class BaseVersion {
 
   generateSetBlockCommand(_banner) {}
 
+  generateShieldGiveCommand(_banner, _selector) {}
+
   fromEncoding(str) {
     const colorCode = str[0];
     const patternCode = str[1];

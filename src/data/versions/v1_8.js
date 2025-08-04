@@ -18,6 +18,10 @@ class Version1_8 extends BaseVersion {
     return this._generateSetblockCommand(bannerData);
   }
 
+  generateShieldGiveCommand(banner, selector = "@p") {
+    return this.generateGiveCommand(banner, selector).replace("minecraft:banner", "minecraft:shield");
+  }
+
   _patternsJSON(bannerData) {
     return JSON.stringify(
       bannerData.map((data) => {
