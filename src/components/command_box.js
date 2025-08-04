@@ -32,8 +32,9 @@ class NCRSCommandBox extends LitElement {
     #controls {
       display: flex;
       gap: 0.5rem;
-      align-items: center;
+      align-items: flex-end;
       justify-content: space-between;
+      flex-wrap: wrap;
       margin-top: 0.25rem;
     }
 
@@ -46,7 +47,9 @@ class NCRSCommandBox extends LitElement {
     }
 
     #version-selector {
-      margin-top: -0.25rem;
+      display: flex;
+      gap: 0.25rem;
+      padding-bottom: 0.5rem;
     }
 
     #selector {
