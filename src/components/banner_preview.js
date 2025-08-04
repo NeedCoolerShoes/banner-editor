@@ -1,8 +1,11 @@
-import { css, LitElement } from "lit";
+import { css, LitElement, unsafeCSS } from "lit";
 import NCRSBannerPatternPreview from "./pattern_preview";
-import { NCRSBanner  } from "../data/banner";
+import { NCRSBanner } from "../data/banner";
 
 const BANNER = NCRSBanner.fromLatestVersion();
+
+import IMG_BANNER_SPRITES from "/assets/banner_sprites.png";
+import IMG_SHIELD_SPRITES from "/assets/shield_sprites.png";
 
 class NCRSBannerPreview extends LitElement {
   static properties = {
@@ -17,6 +20,14 @@ class NCRSBannerPreview extends LitElement {
       display: block;
       width: calc(20px * var(--scale));
       height: calc(40px * var(--scale));
+    }
+
+    :host(.ncrs-banner-sprites) {
+      --ncrs-banner-sprites: url(${unsafeCSS(IMG_BANNER_SPRITES)});
+    }
+
+    :host(.ncrs-shield-sprites) {
+      --ncrs-banner-sprites: url(${unsafeCSS(IMG_SHIELD_SPRITES)});
     }
 
     ncrs-banner-pattern-preview {
