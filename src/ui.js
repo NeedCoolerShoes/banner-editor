@@ -11,7 +11,7 @@ import "./components/command_box.js";
 import "./components/saved_banners.js";
 
 import { css, html, LitElement, unsafeCSS } from "lit";
-import { NCRSBanner } from "./data/banner.js";
+import { NCRSBanner, PERSISTENCE } from "./data/banner.js";
 import { NCRSLayerList } from "./components/layers.js";
 import NCRSBannerPatternPreview from "./components/pattern_preview.js";
 import Modal from "./components/misc/modal.js";
@@ -250,6 +250,7 @@ class NCRSBannerUI extends LitElement {
 
     this.version = NCRSBanner.toValidVersionId(this.version);
     this.banner = NCRSBanner.fromVersion(this.version);
+    this.persistence = PERSISTENCE;
 
     this._color = this.banner.defaultColor().color;
     this.layers = new NCRSLayerList();
@@ -388,7 +389,7 @@ class NCRSBannerUI extends LitElement {
   }
 
   _loadFromPersistence() {
-    const banner = this.banner.persistence.get("current", null);
+    const banner = this.persistence.get("current", null);
     if (!banner) { return; }
 
     this.code = banner;
@@ -413,7 +414,7 @@ class NCRSBannerUI extends LitElement {
       }
     }
 
-    this.banner.persistence.set("current", this.code);
+    this.persistence.set("current", this.code);
   }
 
   _updateColor(event) {

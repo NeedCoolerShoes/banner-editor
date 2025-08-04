@@ -1,7 +1,5 @@
 import { css, html, LitElement } from "lit";
-import { NCRSBanner } from "../data/banner";
-
-const BANNER = NCRSBanner.fromLatestVersion();
+import { PERSISTENCE } from "../data/banner";
 
 class NCRSSavedBanners extends LitElement {
   static properties = {
@@ -103,7 +101,7 @@ class NCRSSavedBanners extends LitElement {
   }
 
   toURL() {
-    const banners = BANNER.persistence.get("banners", []);
+    const banners = PERSISTENCE.get("banners", []);
 
     if (banners.length < 1) {
       return "";
@@ -115,7 +113,7 @@ class NCRSSavedBanners extends LitElement {
   }
 
   _savedBanners() {
-    const banners = BANNER.persistence.get("banners", []);
+    const banners = PERSISTENCE.get("banners", []);
 
     return banners.map(code => {
       return this._createSavedBannerEntry(code);
@@ -142,25 +140,25 @@ class NCRSSavedBanners extends LitElement {
   }
 
   _saveBanner() {
-    const banners = BANNER.persistence.get("banners", []);
+    const banners = PERSISTENCE.get("banners", []);
     
     if (this.code.length <= 2) { return; } 
     if (banners.includes(this.code)) { return; }
 
     banners.push(this.code);
-    BANNER.persistence.set("banners", banners);
+    PERSISTENCE.set("banners", banners);
 
     this.requestUpdate();
   }
 
   _removeBanner(banner) {
-    const banners = BANNER.persistence.get("banners", []);
+    const banners = PERSISTENCE.get("banners", []);
 
     const idx = banners.indexOf(banner);
 
     if (idx > -1) {
       banners.splice(idx, 1);
-      BANNER.persistence.set("banners", banners);
+      PERSISTENCE.set("banners", banners);
     }
 
     this.requestUpdate();

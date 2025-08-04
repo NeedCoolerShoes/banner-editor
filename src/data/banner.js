@@ -5,6 +5,7 @@ import Version1_21 from "./versions/v1_21.js";
 import PersistenceManager from "../persistence.js";
 
 const LATEST_VERSION = "1_21";
+const PERSISTENCE = new PersistenceManager("ncrs-banner");
 
 class NCRSBanner extends EventTarget {
   static versions = {
@@ -56,8 +57,6 @@ class NCRSBanner extends EventTarget {
     } else {
       this.setLatestVersion();
     }
-
-    this.persistence = new PersistenceManager("ncrs-banner");
   }
   version;
   versionId;
@@ -126,7 +125,4 @@ class NCRSBanner extends EventTarget {
   }
 }
 
-const BANNER = new NCRSBanner("1_21");
-window.BANNER = BANNER;
-
-export { NCRSBanner, BANNER };
+export { NCRSBanner, PERSISTENCE };
