@@ -16,10 +16,10 @@ import { NCRSLayerList } from "./components/layers.js";
 import NCRSBannerPatternPreview from "./components/pattern_preview.js";
 import Modal from "./components/misc/modal.js";
 
-import IMG_BANNER_SPRITES from "/assets/banner_sprites.png";
-import IMG_BANNER_OVERLAY from "/assets/banner_overlay.png";
-import IMG_SHIELD_SPRITES from "/assets/shield_sprites.png";
-import IMG_SHIELD_SHADOW_OVERLAY from "/assets/shield_shadow_overlay.png";
+import IMG_BANNER_SPRITES from "../assets/banner_sprites.png";
+import IMG_BANNER_OVERLAY from "../assets/banner_overlay.png";
+import IMG_SHIELD_SPRITES from "../assets/shield_sprites.png";
+import IMG_SHIELD_SHADOW_OVERLAY from "../assets/shield_shadow_overlay.png";
 
 class NCRSBannerUI extends LitElement {
   static properties = {

@@ -1,11 +1,11 @@
 import { css, html, LitElement } from "lit";
 
-import IMG_ARROW_DOWN from "/assets/icons/arrow_down.png";
-import IMG_ARROW_UP from "/assets/icons/arrow_up.png";
-import IMG_EYE_CLOSED from "/assets/icons/eye_closed.png";
-import IMG_EYE_OPEN from "/assets/icons/eye.png";
-import IMG_HANDLE from "/assets/icons/handle.png";
-import IMG_REMOVE from "/assets/icons/remove.png";
+import IMG_ARROW_DOWN from "../../../assets/icons/arrow_down.png";
+import IMG_ARROW_UP from "../../../assets/icons/arrow_up.png";
+import IMG_EYE_CLOSED from "../../../assets/icons/eye_closed.png";
+import IMG_EYE_OPEN from "../../../assets/icons/eye.png";
+import IMG_HANDLE from "../../../assets/icons/handle.png";
+import IMG_REMOVE from "../../../assets/icons/remove.png";
 
 const ICON_MAP = {
   arrow_down: IMG_ARROW_DOWN,

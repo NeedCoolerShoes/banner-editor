@@ -4,8 +4,8 @@ import { NCRSBanner } from "../data/banner";
 
 const BANNER = NCRSBanner.fromLatestVersion();
 
-import IMG_BANNER_SPRITES from "/assets/banner_sprites.png";
-import IMG_SHIELD_SPRITES from "/assets/shield_sprites.png";
+import IMG_BANNER_SPRITES from "../../assets/banner_sprites.png";
+import IMG_SHIELD_SPRITES from "../../assets/shield_sprites.png";
 
 class NCRSBannerPreview extends LitElement {
   static properties = {
