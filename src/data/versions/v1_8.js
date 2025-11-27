@@ -19,7 +19,9 @@ class Version1_8 extends BaseVersion {
   }
 
   generateShieldGiveCommand(banner, selector = "@p") {
-    return this.generateGiveCommand(banner, selector).replace("minecraft:banner", "minecraft:shield");
+    const bannerData = this.parse(banner);
+
+    return this._generateShieldGiveCommand(bannerData, selector);
   }
 
   _patternsJSON(bannerData) {
@@ -34,11 +36,11 @@ class Version1_8 extends BaseVersion {
     const base = bannerData.shift();
 
     const code = base.color.code;
-    if (bannerData.length < 1) { return `give ${selector} minecraft:banner 1 0 {BlockEntityTag:{Base:${code}}}`; }
+    if (bannerData.length < 1) { return `give ${selector} minecraft:banner 1 ${code}`; }
 
     const patterns = this._patternsJSON(bannerData);
 
-    return `give ${selector} minecraft:banner 1 0 {BlockEntityTag:{Base:${code},Patterns:${patterns}}}`;
+    return `give ${selector} minecraft:banner 1 ${code} {BlockEntityTag:{Patterns:${patterns}}}`;
   }
 
   _generateSetblockCommand(bannerData) {
@@ -50,6 +52,17 @@ class Version1_8 extends BaseVersion {
     const patterns = this._patternsJSON(bannerData);
 
     return `setblock ~ ~ ~ minecraft:standing_banner 0 replace {Base:${code},Patterns:${patterns}}`;
+  }
+
+  _generateShieldGiveCommand(bannerData, selector) {
+    const base = bannerData.shift();
+
+    const code = base.color.code;
+    if (bannerData.length < 1) { return `give ${selector} minecraft:shield 1 0 {BlockEntityTag:{Base:${code}}}`; }
+
+    const patterns = this._patternsJSON(bannerData);
+
+    return `give ${selector} minecraft:shield 1 0 {BlockEntityTag:{Base:${code},Patterns:${patterns}}}`;
   }
 }
 
