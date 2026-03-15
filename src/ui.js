@@ -339,7 +339,7 @@ class NCRSBannerUI extends LitElement {
         </ncrs-section>
         <ncrs-section>
           <h2 slot="header">Share Link</h2>
-          <input id="share-link" readonly @click=${select} value=${this.useUrlShortner ? this.urlShortner + "?=" + this.code : location.toString()}>
+          <input id="share-link" readonly @click=${select} value=${this.useUrlShortner ? this.urlShortner + "b?=" + this.code : location.toString()}>
         </ncrs-section>
         <ncrs-section>
           <h2 slot="header">Generate Command</h2>

@@ -113,7 +113,7 @@ class NCRSSavedBanners extends LitElement {
     const codes = banners.join("_");
 
     
-    return `${this.useUrlShortner? this.urlShortner : location.origin}${location.pathname}?=${codes}`
+    return `${this.useUrlShortner ? this.urlShortner : location.origin}${location.pathname}${this.useUrlShortner ? "b":""}?=${codes}`
   }
 
   _savedBanners() {
