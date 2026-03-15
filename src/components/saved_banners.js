@@ -79,6 +79,9 @@ class NCRSSavedBanners extends LitElement {
 
   constructor() {
     super();
+
+    this.useUrlShortner=true;
+    this.urlShortner="https://ncrs.skin";
   }
 
   render() {
@@ -109,7 +112,8 @@ class NCRSSavedBanners extends LitElement {
 
     const codes = banners.join("_");
 
-    return `${location.origin}${location.pathname}?=${codes}`
+    
+    return `${this.useUrlShortner? this.urlShortner : location.origin}${location.pathname}?=${codes}`
   }
 
   _savedBanners() {

@@ -258,7 +258,7 @@ class NCRSBannerUI extends LitElement {
       this.code = this.layers.encode();
     });
     this.useUrlShortner=true;
-    this.urlShortner="https://ncrs.skin/"
+    this.urlShortner="https://ncrs.skin/";
 
     this.previewOverlay = new NCRSBannerPatternPreview();
     this.previewOverlay.id = "preview-overlay";
