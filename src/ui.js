@@ -220,12 +220,15 @@ class NCRSBannerUI extends LitElement {
     
     #url-banner > div {
       display: flex;
+      flex-wrap: wrap;
+      box-sizing: border-box;
       padding: 0.25rem;
       gap: 0.25rem;
     }
 
     #url-banner ncrs-banner-preview {
       cursor: pointer;
+      flex-shrink: 0;
     }
 
     ncrs-modal {
